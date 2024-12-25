@@ -1,0 +1,34 @@
+version: 2.1  # Specify CircleCI version
+
+executors:
+  python-executor:
+    docker:
+      - image: circleci/python:3.10  # Use Python 3.10 Docker image
+    working_directory: ~/repo       # Define the working directory
+
+jobs:
+  build:
+    executor: python-executor
+    steps:
+      - checkout                     # Check out the code from the repository
+
+      - run:
+          name: Update System
+          command: sudo apt-get update
+
+      - run:
+          name: Install Dependencies
+          command: |
+            python3 -m pip install --upgrade pip
+            pip install telebot pymongo aiohttp
+            pip install -r requirements.txt
+
+      - run:
+          name: Run the Python Script
+          command: chmod +x * && chmod +x Kala && python3 Kala.py
+
+workflows:
+  version: 2
+  build-and-run:
+    jobs:
+      - build
